@@ -1,12 +1,15 @@
 gulp = require('gulp')
 $ = require('gulp-load-plugins')()
 path = require('path')
-browserSync = require('browser-sync')
-reload = browserSync.reload
+browser_sync = require('browser-sync')
+reload = browser_sync.reload
 sass = require('gulp-sass')
+wrap_amd = require 'gulp-wrap-amd'
+concat = require 'gulp-concat'
+insert = require 'gulp-insert'
 
 gulp.task 'browser-sync', ->
-    browserSync server: baseDir: './dist'
+    browser_sync server: baseDir: './dist'
     return
 
 gulp.task 'compass', ->
@@ -26,6 +29,19 @@ gulp.task 'images', ->
 
 gulp.task 'templates', ->
     gulp.src('src/*.jade').pipe($.plumber()).pipe($.jade(pretty: true)).pipe gulp.dest('dist/')
+
+gulp.task 'client-templates', ->
+    wrap_begin = (file) ->
+        fname = path.basename file.path, '.js'
+        return "this[\"JadeJST\"][\"#{fname}\"] = "
+    wrap_end = ";\n"
+
+    gulp.src('src/templates/*.jade').pipe($.jade({client: true}))
+        .pipe(insert.wrap(wrap_begin, wrap_end))
+        .pipe(concat('templates.js'))
+        .pipe(gulp.dest('./dist'))
+        .pipe(insert.prepend("this[\"JadeJST\"] = {};"))
+
 
 gulp.task 'default', [
     'compass'
