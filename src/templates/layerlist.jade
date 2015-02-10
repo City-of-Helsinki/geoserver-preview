@@ -1,0 +1,45 @@
+extends ../index
+
+block layerlist
+    if ((typeof layerData) !== "undefined") && (layerData.length != 0)
+        div.row-fluid
+            table
+                tr
+                    th Namespace:Name
+                    th Type
+                    th CRS
+                    th Opacity
+                    th Show
+                    th Download
+                
+                for layer, index in layerData
+                    tr
+                        
+                        if layer['status'] != 'OK'
+                            td(data-name=layer['name'], class='tdName')= layer['name']
+                            td Not found!
+                            td Not found!
+                            td Not found!
+                            td Not found!
+                            td Not found!
+                        else
+                            td(data-name=layer['name'], data-namespace=resourceData[layer['name']]['namespace']['name'], class='tdName')= resourceData[layer['name']]['namespace']['name'] + ':' + layer['name']
+                            td(data-type=layer['type'], class='tdType')= layer['type']
+                            td(data-srs=resourceData[layer['name']]['srs'], data-bbox=resourceData[layer['name']]['nativeBoundingBox']['minx']+','+resourceData[layer['name']]['nativeBoundingBox']['miny']+','+resourceData[layer['name']]['nativeBoundingBox']['maxx']+','+resourceData[layer['name']]['nativeBoundingBox']['maxy'])= resourceData[layer['name']]['srs']
+                            td(id="opacity")
+                                input(type="number", min="0", max="100", value="80", label="opacity")
+                            td
+                                button(label="show on map", id=layer['name'], class='layerToggle do-show') Show
+                            td
+
+                                select(onchange="window.open((this.options[this.selectedIndex].parentNode.label == 'WMS') ? 'http://geoserver.hel.fi/geoserver/#{resourceData[layer['name']]['namespace']['name']}/wms?service=WMS&version=1.1.0&request=GetMap&layers=#{resourceData[layer['name']]['namespace']['name']}:#{layer['name']}&styles=&bbox=#{resourceData[layer['name']]['nativeBoundingBox']['minx']},#{resourceData[layer['name']]['nativeBoundingBox']['miny']},#{resourceData[layer['name']]['nativeBoundingBox']['maxx']},#{resourceData[layer['name']]['nativeBoundingBox']['maxy']}&width=512&height=411&srs=#{resourceData[layer['name']]['srs']}&format=' + this.options[this.selectedIndex].value : 'http://geoserver.hel.fi/geoserver/#{resourceData[layer['name']]['namespace']['name']}/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=#{resourceData[layer['name']]['namespace']['name']}:#{layer['name']}&maxFeatures=50&outputFormat=' + this.options[this.selectedIndex].value);this.selectedIndex=0;")
+                                    option Select one
+                                    optgroup(label="WMS")
+                                        for opt, label in wms_formats
+                                            option(value=opt)= label
+                                    if layer['type'] == 'VECTOR'
+                                        optgroup(label="WFS")
+                                            for opt, label in wfs_formats
+                                                option(value=opt)= label
+    else
+        p No layers found, but this might be a problem with connecting to Geoserver
