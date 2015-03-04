@@ -23,7 +23,8 @@ exports.attachHandlers = (app) ->
 fetchLayers = (req, res, next) ->
     #parse the layer names
     layerNames = parseQueryParams(req)
-    #need to save a reference so we can next() when they're all resolved
+
+    #need to store because we need to know when all of the promises are done
     promises = []
     for layerName in layerNames
         url = (config.get 'geoserver_baseurl') + "/rest/layers/#{layerName}"
@@ -41,6 +42,7 @@ fetchLayers = (req, res, next) ->
                 'type': if (Object.keys resourceDoc)[0] == 'coverage' then 'raster' else 'vector'
                 'srs': resource['srs']
                 'nativeBoundingBox': resource['nativeBoundingBox']
+                'downloadLinkScript': makeDownloadScript(resource)
             return layerData
         .catch (error) ->
             layerData =
@@ -48,6 +50,7 @@ fetchLayers = (req, res, next) ->
                 'name': layerName
             return layerData
 
+        #store the promise we just constructed
         promises.push layerPromise
 
     #allSettled() instead of all() because we don't want to abort on 404
@@ -60,7 +63,6 @@ fetchLayers = (req, res, next) ->
         next() #go render
 
 parseQueryParams = (req) ->
-    # TODO better error handling
     if not req.query.layers? or req.query.layers == ''
         return []
 
@@ -77,3 +79,26 @@ geoserverRestPromise = (href) ->
             'sendImmediately': true # waiting for contest results in 404
     #turn the request-promise object into a Q promise
     Q (rp options).promise()
+
+#TODO: this is horrible. references select-elem in the template
+#geoserver web UI does it like this also, still feels bad though
+makeDownloadScript = (resource) ->
+    return "window.open((this.options[this.selectedIndex].parentNode.label == 'WMS') ? "+
+            "'#{(config.get 'geoserver_baseurl')}/#{resource['namespace']['name']}/wms"+
+            "?service=WMS"+
+            "&version=1.1.0"+
+            "&request=GetMap"+
+            "&layers=#{resource['namespace']}:#{resource['name']}"+
+            "&styles="+
+            "&bbox=#{resource['nativeBoundingBox']['minx']},#{resource['nativeBoundingBox']['miny']},#{resource['nativeBoundingBox']['maxx']},#{resource['nativeBoundingBox']['maxy']}"+
+            "&width=512&height=411"+
+            "&srs="+resource['srs']+
+            "&format=' + this.options[this.selectedIndex].value : "+
+            "'#{(config.get 'geoserver_baseurl')}/#{resource['namespace']['name']}/ows"+
+            "?service=WFS"+
+            "&version=1.0.0"+
+            "&request=GetFeature"+
+            "&typeName=#{resource['namespace']['name']}:#{resource['name']}"+
+            "&maxFeatures=50"+
+            "&outputFormat='"+
+            " + this.options[this.selectedIndex].value);this.selectedIndex=0;"

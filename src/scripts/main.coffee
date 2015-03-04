@@ -30,7 +30,6 @@ map = @olmap.createMap('map')
                         params:
                             VERSION: '1.1.0'
                             LAYERS: layername
-                            # STYLES: 'popdensity_aggr7_12'
                         serverType: 'geoserver'
                 # after fetching, add it to the mapobject's layers list/object
                 mapObj.layers[name] =
