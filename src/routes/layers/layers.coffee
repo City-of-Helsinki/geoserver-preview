@@ -28,21 +28,21 @@ fetchLayers = (req, res, next) ->
     promises = []
     for layerName in layerNames
         url = (config.get 'geoserver_baseurl') + "/rest/layers/#{layerName}"
-    
         layerPromise = geoserverRestPromise url
         .then (layer) -> #first document, contains url to full document
             return geoserverRestPromise layer.layer.resource.href
         .then (resourceDoc) -> #full document, contains all data on layer
             #all data is behind either 'coverage' or 'featureType'
             resource = resourceDoc[(Object.keys resourceDoc)[0]]
+            type = if (Object.keys resourceDoc)[0] == 'coverage' then 'raster' else 'vector'
             layerData =
                 'status': 'OK'
                 'name': resource['name']
                 'namespace': resource['namespace']['name']
-                'type': if (Object.keys resourceDoc)[0] == 'coverage' then 'raster' else 'vector'
+                'type': type
                 'srs': resource['srs']
                 'nativeBoundingBox': resource['nativeBoundingBox']
-                'downloadLinkScript': makeDownloadScript(resource)
+                'downloadLinks': makeDownloadLinks(resource)
             return layerData
         .catch (error) ->
             layerData =
@@ -80,25 +80,24 @@ geoserverRestPromise = (href) ->
     #turn the request-promise object into a Q promise
     Q (rp options).promise()
 
-#TODO: this is horrible. references select-elem in the template
-#geoserver web UI does it like this also, still feels bad though
-makeDownloadScript = (resource) ->
-    return "window.open((this.options[this.selectedIndex].parentNode.label == 'WMS') ? "+
-            "'#{(config.get 'geoserver_baseurl')}/#{resource['namespace']['name']}/wms"+
-            "?service=WMS"+
-            "&version=1.1.0"+
-            "&request=GetMap"+
-            "&layers=#{resource['namespace']}:#{resource['name']}"+
-            "&styles="+
-            "&bbox=#{resource['nativeBoundingBox']['minx']},#{resource['nativeBoundingBox']['miny']},#{resource['nativeBoundingBox']['maxx']},#{resource['nativeBoundingBox']['maxy']}"+
-            "&width=512&height=411"+
-            "&srs="+resource['srs']+
-            "&format=' + this.options[this.selectedIndex].value : "+
-            "'#{(config.get 'geoserver_baseurl')}/#{resource['namespace']['name']}/ows"+
-            "?service=WFS"+
-            "&version=1.0.0"+
-            "&request=GetFeature"+
-            "&typeName=#{resource['namespace']['name']}:#{resource['name']}"+
-            "&maxFeatures=50"+
-            "&outputFormat='"+
-            " + this.options[this.selectedIndex].value);this.selectedIndex=0;"
+makeDownloadLinks = (resource) ->
+    commonUrl = (config.get 'geoserver_baseurl') + '/' + resource['namespace']['name']
+    layerFullName = resource['namespace']['name'] + ':' + resource['name']
+    bboxStr = resource['nativeBoundingBox']['minx'] + ','+
+        resource['nativeBoundingBox']['miny']+','+
+        resource['nativeBoundingBox']['maxx']+','+
+        resource['nativeBoundingBox']['maxy']
+
+    wms_url = commonUrl + "/wms?service=WMS&version=1.1.0&request=GetMap"+
+        "&layers=#{layerFullName}"+
+        "&styles=&bbox=#{bboxStr}"+
+        "&width=512&height=411"+
+        "&srs=#{resource['srs']}"+
+        "&format="
+
+    wfs_url = commonUrl + "/ows?service=WFS&version=1.0.0&request=GetFeature"+
+        "&typeName=#{layerFullName}"+
+        "&maxFeatures=50"+
+        "&outputFormat="
+
+    return {'wms': wms_url, 'wfs': wfs_url}
