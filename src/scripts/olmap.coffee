@@ -20,6 +20,7 @@ class MapObj
             format: 'image/png'
             projection: @projection
             opacity: 0
+            #TODO don't hardcode address
             url:'http://geoserver.hel.fi/mapproxy/wmts/osm-sm/etrs_tm35fin/{z}/{x}/{y}.png'
             layer: 0
             tileGrid: new ol.tilegrid.WMTS

@@ -29,7 +29,7 @@ block layerlist
                             td(id="opacity")
                                 input(type="number", min="0", max="100", value="80", label="opacity")
                             td
-                                button(label="show on map", id=layer['name'], class='layerToggle do-show') Show
+                                button(label="show on map", id=layer['name'], class='layerToggle do-show', data-namespace=layer['namespace'], data-name=layer['name'], class='tdName') Show
                             td
                                 select
                                     option Select one

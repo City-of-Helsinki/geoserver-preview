@@ -7,12 +7,9 @@ map = @olmap.createMap('map')
 ((mapObj) ->
     ($ '.layerToggle').on 'click', (event) ->
         targ = $ event.target
-
-        # this looks bad. we're getting the buttons closest parent and then 2 siblings of that parent
-        # TODO store the data attributes in a nicer way
-        namespace = ($ ($ targ[0]).parent().siblings '.tdName').data 'namespace'
-        name = ($ ($ targ[0]).parent().siblings '.tdName').data 'name'
-        layername = namespace + ':' + name
+        name = ($ targ[0]).data 'name'
+        namespace = ($ targ[0]).data 'namespace'
+        layername = "#{namespace}:#{name}"
         opacity = ($ ($ ($ targ[0]).parent().siblings '#opacity').find 'input').val() / 100
 
         # should we show the layer or hide it?
@@ -22,6 +19,7 @@ map = @olmap.createMap('map')
 
             # only fetch from server if we havent' already
             if not mapObj.layers[name]?
+                #TODO don't hardcode the base address
                 url = "http://geoserver.hel.fi/geoserver/#{namespace}/wms"
                 newlayer = new ol.layer.Image
                     opacity: opacity
