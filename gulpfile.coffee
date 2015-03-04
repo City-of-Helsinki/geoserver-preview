@@ -51,7 +51,6 @@ gulp.task 'default', [
     'coffee'
     'images'
     'templates'
-    'client-templates'
     'browser-sync'
     'server'
 ], ->
@@ -59,7 +58,7 @@ gulp.task 'default', [
         'compass'
         reload
     ]
-    gulp.watch 'src/**/*.coffee', [
+    gulp.watch 'src/scripts/*.coffee', [
         'coffee'
         reload
     ]
