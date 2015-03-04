@@ -23,7 +23,7 @@ gulp.task 'compass', ->
 gulp.task 'coffee', ->
     gulp.src('src/scripts/main.coffee', read: false).pipe($.plumber()).pipe($.browserify(
         debug: true
-        insertGlobals: true
+        insertGlobals: false
         transform: [ 'coffeeify' ]
         extensions: [ '.coffee' ])).pipe($.rename('app.js')).pipe gulp.dest('dist/scripts')
 

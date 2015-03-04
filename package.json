@@ -25,8 +25,8 @@
     "gulp-util": "^3.0.3",
     "jade": "^1.9.2",
     "js-yaml": "^3.2.6",
-    "libxmljs": "^0.13.0",
     "marked": "*",
-    "request": "^2.53.0"
+    "q": "^1.2.0",
+    "request-promise": "^0.4.0"
   }
 }
