@@ -12,7 +12,7 @@ exports.attachHandlers = (app) ->
 
     # GET
     # here we define the serial steps to take when this route is GETted
-    app.get '/layers',
+    app.get '/geoserver-preview/',
         fetchLayers,
         (req, res) ->
             #when we get here, res.locals already has layer and dl-format data

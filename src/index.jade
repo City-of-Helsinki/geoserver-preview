@@ -6,19 +6,19 @@ html.no-js
         title Map preview
         meta(name='description', content='')
         meta(name='viewport', content='width=device-width, initial-scale=1')
-        link(rel="stylesheet", href="stylesheets/main.css")
+        link(rel="stylesheet", href="/geoserver-preview/static/stylesheets/main.css")
 
-        script(src="bower_components/jquery/dist/jquery.js")
+        script(src="/geoserver-preview/static/bower_components/jquery/dist/jquery.js")
         
         link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css", rel="stylesheet")
         script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js")
         
-        link(rel="stylesheet", href="bower_components/openlayers3/build/ol.css")
-        script(src="bower_components/proj4/dist/proj4.js")
+        link(rel="stylesheet", href="/geoserver-preview/static/bower_components/openlayers3/build/ol.css")
+        script(src="/geoserver-preview/static/bower_components/proj4/dist/proj4.js")
         
         script(type="text/javascript").
           proj4.defs('EPSG:3067','+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-        script(src="bower_components/openlayers3/build/ol.js")
+        script(src="/geoserver-preview/static/bower_components/openlayers3/build/ol.js")
     body
         <!--[if lte IE 8]>
         p.browsehappy
@@ -34,7 +34,7 @@ html.no-js
 
             div#map.map
 
-        script(src="scripts/app.js")
+        script(src="/geoserver-preview/static/scripts/app.js")
 
 
   //- Google Analytics: change UA-XXXXX-X to be your site's ID.

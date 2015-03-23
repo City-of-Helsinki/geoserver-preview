@@ -7,7 +7,7 @@ exports.createServer = ->
     app = express()
     app.set 'views', (path.join __dirname, './templates')
     app.set 'view engine', 'jade'
-    app.use (express.static './dist')
+    app.use '/geoserver-preview/static', express.static './dist'
 
     routes.attachHandlers(app)
 
