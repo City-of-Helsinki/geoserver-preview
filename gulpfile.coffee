@@ -16,6 +16,7 @@ gulp.task 'server', ->
     server.createServer()
 
 gulp.task 'compass', ->
+    gulp.src('./src/stylesheets/*.css').pipe gulp.dest('./dist/stylesheets')
     gulp.src('./src/stylesheets/*.scss').pipe($.plumber()).pipe($.compass(
         css: 'dist/stylesheets'
         sass: 'src/stylesheets')).pipe gulp.dest('dist/stylesheets')

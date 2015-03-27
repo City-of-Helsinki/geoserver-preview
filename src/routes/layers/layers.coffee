@@ -5,19 +5,19 @@ Q = require 'q'
 
 WFS_DOWNLOAD_FORMATS = {'CSV':'CSV', 'GML2':'GML2', 'GML3.1':'text/xml; subtype=gml/3.1.1', 'GML3.2':'application/gml+xml; version=3.2', 'GeoJSON':'application/json', 'KML':'application/vnd.google-earth.kml+xml', 'ShapeFile':'SHAPE-ZIP'}
 WMS_DOWNLOAD_FORMATS = {'AtomPub':'atom', 'GIF':'image/gif', 'GeoRSS':'application/rss+xml', 'GeoTIFF':'image/geotiff', 'GeoTIFF 8-bits':'image/geotiff8', 'JPEG':'image/jpeg', 'KML (Compressed)':'application/vnd.google-earth.kmz+xml', 'KML (Network link)': 'application/vnd.google-earth.kml+xml;mode=networklink', 'KML (Plain)':'application/vnd.google-earth.kml+xml', 'PDF':'application/pdf', 'PNG':'image/png', 'PNG 8-bit':'image/png;+mode=8bit', 'SVG':'image/svg', 'Tiff':'image/tiff', 'Tiff 8-bits':'image/tiff8', 'OpenLayers':'text/html;+subtype=openlayers'}
+STATIC_URL = config.get 'static_url'
 
 exports.attachHandlers = (app) ->
-    #POST
-    #nothing here, could be app.post '/layers'
-
     # GET
     # here we define the serial steps to take when this route is GETted
     app.get '/geoserver-preview/',
         fetchLayers,
         (req, res) ->
             #when we get here, res.locals already has layer and dl-format data
-            res.render 'layerlist'
+            res.render 'layerlist', { staticPrefix:staticFileHelper }
 
+staticFileHelper = (fpath) ->
+    STATIC_URL + fpath
 
 #fetch layers, construct object for template to use when rendering
 fetchLayers = (req, res, next) ->

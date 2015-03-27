@@ -2,4 +2,5 @@ geoserver_user: none
 geoserver_pass: none
 geoserver_baseurl: http://geoserver.hel.fi/geoserver
 
+static_url: /geoserver-preview/static
 express_port: 80

@@ -1,32 +1,65 @@
 body, * {
     font-family: sans-serif;
-    background: #283772;
+    background: #33A8FF;
 }
-.container {
-    width: 1000px;
+#maincontainer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 95%;
     height: auto;
     border: 1px solid #ccc;
     background: #fff;
+    box-shadow: 1px 1px 1px black;
+    border-radius: 3px;
+    padding: 35px;
+    
     * {
         background: #fff;
     }
-    box-shadow: 1px 1px 1px black;
-    border-radius: 3px;
-    margin: 0 auto;
-    padding: 35px;
+    
     h1, h2 {
         text-align: center;
     }
-    td, th {
-        padding-left: 5px;
-        padding-right: 5px;
+
+    .tablecontainer {
+        width: 100%;
+        padding: 20px;
+        
+        .layerlist {
+            margin: auto;
+        }
+        .show-on-map {
+            text-align: center;
+        }
+        
+        td, th {
+            border-bottom: 1px solid gray;
+            padding: 8px;
+        }
+        
+        td input {
+            width: 60px;
+        }
     }
-    td input {
-        width: 60px;
+
+
+    .map {
+        height: 600px;
+        width: 100%;
+    }
+    #attribution {
+        text-align: right;
     }
 }
 
-.map {
-    height: 600px;
-    width: 100%;
+.footer {
+    text-align: center;
+    width: 600px;
+    margin: auto;
+    margin-top: 20px;
+    padding-top: 20px;
+    a {
+        margin: 20px;
+    }
+    
 }
