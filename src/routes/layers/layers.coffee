@@ -23,6 +23,9 @@ staticFileHelper = (fpath) ->
 fetchLayers = (req, res, next) ->
     #parse the layer names
     layerNames = parseQueryParams(req)
+    if not layerNames.length
+        #even if nothing was requested, show at least something
+        return res.redirect('/geoserver-preview?layers=Seutu_tilastoalueet')
 
     #need to store because we need to know when all of the promises are done
     promises = []
@@ -83,10 +86,8 @@ geoserverRestPromise = (href) ->
 makeDownloadLinks = (resource) ->
     commonUrl = (config.get 'geoserver_baseurl') + '/' + resource['namespace']['name']
     layerFullName = resource['namespace']['name'] + ':' + resource['name']
-    bboxStr = resource['nativeBoundingBox']['minx'] + ','+
-        resource['nativeBoundingBox']['miny']+','+
-        resource['nativeBoundingBox']['maxx']+','+
-        resource['nativeBoundingBox']['maxy']
+    bboxStr = "#{resource['nativeBoundingBox']['minx']},#{resource['nativeBoundingBox']['miny']},"+
+        "#{resource['nativeBoundingBox']['maxx']},#{resource['nativeBoundingBox']['maxy']}"
 
     wms_url = commonUrl + "/wms?service=WMS&version=1.1.0&request=GetMap"+
         "&layers=#{layerFullName}"+
