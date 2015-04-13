@@ -2,7 +2,8 @@ extends ../index
 
 block layerlist
     if ((typeof layerData) !== "undefined") && (layerData.length != 0)
-            table.layerlist
+        div.table-responsive
+            table.layerlist.table
                 tr
                     th Namespace:Name
                     th Type

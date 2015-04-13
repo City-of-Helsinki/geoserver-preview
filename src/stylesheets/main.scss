@@ -61,5 +61,16 @@ body, * {
     a {
         margin: 20px;
     }
-    
+    img {
+        width: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer {
+        width: 300px;
+        img {
+            width: 100px;
+        }
+    }
 }
