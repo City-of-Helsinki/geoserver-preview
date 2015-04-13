@@ -3,6 +3,9 @@
 @olmap = (require "./olmap").MapObj
 map = @olmap.createMap('map')
 
+getLegend = (namespace,name) ->
+    return "http://geoserver.hel.fi/geoserver/#{namespace}/wms?version=1.1.0&request=GetLegendGraphic&layer=#{namespace}:#{name}&width=30&height=30&format=image/png"
+
 # Event handlers for "toggle visibility"
 ((mapObj) ->
     ($ '.layerToggle').on 'click', (event) ->
@@ -15,7 +18,7 @@ map = @olmap.createMap('map')
         # should we show the layer or hide it?
         if targ.hasClass 'do-show'
             (targ.removeClass 'do-show').addClass 'do-hide'
-            targ.html 'Hide'
+            targ.html 'Piilota'
 
             # only fetch from server if we havent' already
             if not mapObj.layers[name]?
@@ -33,12 +36,21 @@ map = @olmap.createMap('map')
                 mapObj.layers[name] =
                     'layerObj': newlayer
                     'styles': []
+                    'legend': getLegend(namespace, name)
 
-            # we've either fetched the image and created a layer just now or earlier. either way it should be there 
+            # we've either fetched the image and created a layer just now or earlier. either way it should be there
             mapObj.layers[name]['layerObj'].setOpacity opacity
             mapObj.map.addLayer(mapObj.layers[name]['layerObj'])
-        
+
+            #add the legend image into the table
+            legend = $ '<img>'
+            legend.attr 'src', mapObj.layers[name]['legend']
+            ((targ.closest 'tr').find '.legend-td').html legend
+
         else
             (targ.removeClass 'do-hide').addClass 'do-show'
-            targ.html 'Show'
-            mapObj.map.removeLayer mapObj.layers[name]['layerObj'])(@olmap)
+            targ.html 'Näytä'
+            mapObj.map.removeLayer mapObj.layers[name]['layerObj']
+            ((targ.closest 'tr').find '.legend-td').html ''
+
+)(@olmap)

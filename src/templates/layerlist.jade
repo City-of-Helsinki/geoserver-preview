@@ -9,13 +9,15 @@ block layerlist
                     th CRS
                     th Läpinäkyvyys
                     th Lataa
-                    th Näytä kartalla
+                    th Näytä
+                    th Seloste
                 
                 for layer, index in layerData
                     tr
                         
                         if layer['status'] != 'OK'
                             td(data-name=layer['name'], class='tdName')= layer['name']
+                            td Ei löytynyt!
                             td Ei löytynyt!
                             td Ei löytynyt!
                             td Ei löytynyt!
@@ -39,6 +41,7 @@ block layerlist
                                                 option(value=opt, onclick="window.open('#{layer['downloadLinks']['wfs']}#{opt}');this.parentNode.parentNode.selectedIndex=0;")= label
                             td.show-on-map
                                 button(label="Näytä kartalla", id=layer['name'], class='layerToggle do-show', data-namespace=layer['namespace'], data-name=layer['name'], class='tdName') Näytä
+                            td.legend-td
 
     else
         p Mitään ei löytynyt tai Helsingin kaupungin 
