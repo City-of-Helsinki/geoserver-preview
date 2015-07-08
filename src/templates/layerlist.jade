@@ -31,15 +31,16 @@ block layerlist
                             td(id="opacity")
                                 input(type="number", min="0", max="100", value="80", label="opacity")
                             td
-                                select
+                                //- Behaviour of select differs in FF and Chrome. FF produces a click event for the option showing when we click on the select element to expand it, which is not what we want.
+                                select(onclick="this.selectedIndex==0 ? null : window.open(this.value);this.selectedIndex=0;")
                                     option Valitse formaatti
                                     optgroup(label="WMS")
                                         for opt, label in wms_formats
-                                            option(value=opt, onclick="window.open('#{layer['downloadLinks']['wms']}#{opt}');this.parentNode.parentNode.selectedIndex=0;")= label
+                                            option(value="#{layer['downloadLinks']['wms']}#{opt}")= label
                                     if layer['type'] == 'vector'
                                         optgroup(label="WFS")
                                             for opt, label in wfs_formats
-                                                option(value=opt, onclick="window.open('#{layer['downloadLinks']['wfs']}#{opt}');this.parentNode.parentNode.selectedIndex=0;")= label
+                                                option(value="#{layer['downloadLinks']['wfs']}#{opt}")= label
                             td.show-on-map
                                 button(label="Näytä kartalla", id=layer['name'], class='layerToggle do-show', data-namespace=layer['namespace'], data-name=layer['name'], class='tdName') Näytä
                             td.legend-td
