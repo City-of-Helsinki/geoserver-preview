@@ -1,4 +1,4 @@
-body, * {
+body {
     font-family: sans-serif;
     background: #33A8FF;
 }
@@ -12,11 +12,7 @@ body, * {
     box-shadow: 1px 1px 1px black;
     border-radius: 3px;
     padding: 35px;
-    
-    * {
-        background: #fff;
-    }
-    
+
     h1, h2 {
         text-align: center;
     }
@@ -47,6 +43,7 @@ body, * {
         height: 600px;
         width: 100%;
     }
+
     #attribution {
         text-align: right;
     }
@@ -54,23 +51,25 @@ body, * {
 
 .footer {
     text-align: center;
-    width: 600px;
-    margin: auto;
-    margin-top: 20px;
-    padding-top: 20px;
-    a {
-        margin: 20px;
-    }
+    width: 100%;
+    padding: 20px;
     img {
         width: 150px;
+        margin: 10px 40px;
     }
 }
 
 @media (max-width: 768px) {
+    #maincontainer {
+        padding: 15px;
+        margin-top: 5px;
+    }
+
     .footer {
-        width: 300px;
+        width: 100%;
         img {
-            width: 100px;
+            width: 150px;
+            margin: 10px 20px;
         }
     }
 }
