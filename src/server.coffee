@@ -5,7 +5,7 @@ config = require 'config'
 
 STATIC_URL = (config.get 'base_url') + config.get 'static_prefix'
 
-exports.createServer = ->
+startServer = ->
     app = express()
     app.set 'views', (path.join __dirname, './templates')
     app.set 'view engine', 'jade'
@@ -13,4 +13,12 @@ exports.createServer = ->
 
     routes.attachHandlers(app)
 
+    # for prepending static file links in the templates
+    app.locals['staticPrefix'] = (fpath) ->
+        return STATIC_URL + fpath
+
     server = app.listen (config.get 'express_port')
+
+exports.createServer = startServer
+
+startServer()
