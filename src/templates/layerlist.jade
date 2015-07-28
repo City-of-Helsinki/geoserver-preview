@@ -44,6 +44,21 @@ block layerlist
                             td.show-on-map
                                 button(label="Näytä kartalla", id=layer['name'], class='layerToggle do-show', data-namespace=layer['namespace'], data-name=layer['name'], class='tdName') Näytä
                             td.legend-td
+                if ((typeof available_layers) !== "undefined") && (available_layers.length != 0)
+                    tr
+                        td
+                            //- Dropdown to add a new dataset into the list
+                            select(id="addnew-list" onclick="this.selectedIndex==0 ? null : window.open(window.location.href+','+this.value.split(':')[1], '_self');this.selectedIndex=0;")
+                                option Selaa aineistoja ja lisää esikatseluun
+                                for layer in available_layers
+                                  option #{layer}
+                        td
+                        td
+                        td
+                        td
+                        td
+                        td
+
 
     else
         p Mitään ei löytynyt tai Helsingin kaupungin 
