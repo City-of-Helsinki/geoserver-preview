@@ -5,15 +5,18 @@ browser_sync = require('browser-sync')
 reload = browser_sync.reload
 sass = require('gulp-sass')
 concat = require 'gulp-concat'
-insert = require 'gulp-insert'
-server = require './src/server'
+nodemon = require 'gulp-nodemon'
+
+reportChange = (event) ->
+    console.log 'File ' + event.path + ' was ' + event.type + ', building assets...'
 
 gulp.task 'browser-sync', ->
-    browser_sync server: baseDir: './dist'
-    return
+    browser_sync
+        port: '3001'
+        proxy: 'http://localhost:3000/geoserver-preview'
 
-gulp.task 'server', ->
-    server.createServer()
+gulp.task 'bs-reload', ->
+    browser_sync.reload()
 
 gulp.task 'compass', ->
     gulp.src('./src/stylesheets/*.css').pipe gulp.dest('./dist/stylesheets')
@@ -31,44 +34,27 @@ gulp.task 'coffee', ->
 gulp.task 'images', ->
     gulp.src('./src/images/*').pipe gulp.dest('./dist/images')
 
-gulp.task 'templates', ->
-    gulp.src('src/*.jade').pipe($.plumber()).pipe($.jade(pretty: true)).pipe gulp.dest('dist/')
+gulp.task 'nodemon', ->
+    nodemon
+        script: 'src/server.coffee'
 
-gulp.task 'client-templates', ->
-    wrap_begin = (file) ->
-        fname = path.basename file.path, '.js'
-        return "this[\"JadeJST\"][\"#{fname}\"] = "
-    wrap_end = ";\n"
+gulp.task 'develop', [
+    'compass'
+    'coffee'
+    'images'
+    'nodemon'
+    'browser-sync'
+], ->
+    (gulp.watch 'src/stylesheets/*.scss', ['compass','bs-reload']).on 'change', reportChange
+    (gulp.watch 'src/scripts/*.coffee', ['coffee','bs-reload']).on 'change', reportChange
+    (gulp.watch 'src/images/**/*', ['images','bs-reload']).on 'change', reportChange
+    (gulp.watch 'src/**/*.jade', ['bs-reload']).on('change', reportChange)
+    return
 
-    gulp.src('src/templates/*.jade').pipe($.jade({client: true}))
-        .pipe(insert.wrap(wrap_begin, wrap_end))
-        .pipe(concat('templates.js'))
-        .pipe(gulp.dest('./dist'))
-        .pipe(insert.prepend("this[\"JadeJST\"] = {};"))
-
-
+#production
 gulp.task 'default', [
     'compass'
     'coffee'
     'images'
-    'templates'
-    'browser-sync'
-    'server'
 ], ->
-    gulp.watch 'src/stylesheets/*.scss', [
-        'compass'
-        reload
-    ]
-    gulp.watch 'src/scripts/*.coffee', [
-        'coffee'
-        reload
-    ]
-    gulp.watch 'src/images/**/*', [
-        'images'
-        reload
-    ]
-    gulp.watch 'src/*.jade', [
-        'templates'
-        reload
-    ]
     return
