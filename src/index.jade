@@ -29,37 +29,42 @@ html.no-js
           | to improve your experience.
         <![endif]-->
 
-        div#maincontainer.container
-            h1 Geoserver-esikatselu
-            br
+        if ((typeof tileserverUrl) !== "undefined") && (tileserverUrl.length != 0)
+          div#config(data-tileserver-url=tileserverUrl, data-geoserver-baseurl=geoserverUrl)
+          div#maincontainer.container
+              h1 Geoserver-esikatselu
+              br
 
-            p(style="text-align:center;") Täällä voit esikatsella osoiterivillä määriteltyjä Helsingin kaupungin avoimia 
-              a(href="http://geoserver.hel.fi/geoserver/web" target="_blank") paikkatietoaineistoja
-              |  ja ladata ne haluamassasi muodossa. Sivun toteutus on 
-              a(href="https://github.com/City-of-Helsinki/geoserver-preview" target="_blank") avointa lähdekoodia
-              |.
+              p(style="text-align:center;") Täällä voit esikatsella osoiterivillä määriteltyjä Helsingin kaupungin avoimia 
+                a(href="http://geoserver.hel.fi/geoserver/web" target="_blank") paikkatietoaineistoja
+                |  ja ladata ne haluamassasi muodossa. Sivun toteutus on 
+                a(href="https://github.com/City-of-Helsinki/geoserver-preview" target="_blank") avointa lähdekoodia
+                |.
 
-            div.tablecontainer
-                block layerlist
+              div.tablecontainer
+                  block layerlist
 
-        
-            div#map.map
-            p#attribution ©
-                a(href="http://www.openstreetmap.org/copyright") OpenStreetMap
-                |  contributors
-                div#popup.ol-popup
-                a(href="#" id="popup-closer" class="ol-popup-closer")
-                div#popup-content
+          
+              div#map.map
+              p#attribution ©
+                  a(href="http://www.openstreetmap.org/copyright") OpenStreetMap
+                  |  contributors
+                  div#popup.ol-popup
+                  a(href="#" id="popup-closer" class="ol-popup-closer")
+                  div#popup-content
 
-            
-            div.footer
-                a(href="http://dev.hel.fi" target="_blank")
-                    img(src=staticPrefix("/images/hel-heart-dev.png"), title="Helsinki loves developers!", alt="Helsinki loves developers!")
-                a(href="http://www.hri.fi" target="_blank")
-                    img(src=staticPrefix("/images/hri.png"), title="Helsinki Region Infoshare", alt="Helsinki Region Infoshare")
+              
+              div.footer
+                  a(href="http://dev.hel.fi" target="_blank")
+                      img(src=staticPrefix("/images/hel-heart-dev.png"), title="Helsinki loves developers!", alt="Helsinki loves developers!")
+                  a(href="http://www.hri.fi" target="_blank")
+                      img(src=staticPrefix("/images/hri.png"), title="Helsinki Region Infoshare", alt="Helsinki Region Infoshare")
 
-        script(src=staticPrefix("/scripts/app.js"))
-
+          script(src=staticPrefix("/scripts/app.js"))
+        else
+          p Mitään ei löytynyt tai Helsingin kaupungin 
+            a(href="http://geoserver.hel.fi/geoserver/web") Geoserveriin
+            |  ei saada yhteyttä
 
   //- Google Analytics: change UA-XXXXX-X to be your site's ID.
   //-

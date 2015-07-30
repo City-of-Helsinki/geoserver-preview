@@ -28,6 +28,10 @@ capabilitiesToLayerList = (url) ->
 
 #fetch layers, construct object for template to use when rendering
 fetchLayers = (req, res, next) ->
+
+    if !geoserverBaseUrl || ((typeof geoserverBaseUrl) == "undefined") || (geoserverBaseUrl.length == 0)
+        next()
+
     #parse the layer names
     layerNames = parseQueryParams(req)
     if not layerNames.length
@@ -73,7 +77,7 @@ fetchLayers = (req, res, next) ->
     (Q.allSettled promises).then (results) ->
         #first element is the list of all layers
         res.locals['available_layers'] = results[0].value
-        
+
         res.locals.layerData = []
         results.slice(1).forEach (result) ->
             res.locals.layerData.push result.value

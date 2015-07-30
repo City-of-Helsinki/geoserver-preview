@@ -13,7 +13,7 @@ reportChange = (event) ->
 gulp.task 'browser-sync', ->
     browser_sync
         port: '3001'
-        proxy: 'http://localhost:3000/geoserver-preview'
+        proxy: 'http://localhost:3000/preview'
 
 gulp.task 'bs-reload', ->
     browser_sync.reload()
@@ -51,7 +51,7 @@ gulp.task 'develop', [
     (gulp.watch 'src/**/*.jade', ['bs-reload']).on('change', reportChange)
     return
 
-#production
+#production: just build the assets. pm2 handles the process
 gulp.task 'default', [
     'compass'
     'coffee'

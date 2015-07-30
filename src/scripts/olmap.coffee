@@ -20,8 +20,8 @@ class MapObj
             format: 'image/png'
             projection: @projection
             opacity: 0
-            #TODO don't hardcode address
-            url:'http://geoserver.hel.fi/mapproxy/wmts/osm-sm/etrs_tm35fin/{z}/{x}/{y}.png'
+            # we're in the browser so need to get the address from a DOM element
+            url: $('#config').data('tileserver-url')
             layer: 0
             tileGrid: new ol.tilegrid.WMTS
                 origin: ol.extent.getTopLeft @projection.getExtent()
