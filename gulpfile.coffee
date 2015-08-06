@@ -6,9 +6,17 @@ reload = browser_sync.reload
 sass = require('gulp-sass')
 concat = require 'gulp-concat'
 nodemon = require 'gulp-nodemon'
+gutil = require 'gulp-util'
+cjsx = require 'gulp-cjsx'
 
 reportChange = (event) ->
     console.log 'File ' + event.path + ' was ' + event.type + ', building assets...'
+
+gulp.task 'cjsx', ->
+    gulp.src('./src/*.cjsx')
+        .pipe($.plumber())
+        .pipe(cjsx({bare: true}).on('error', gutil.log))
+        .pipe(gulp.dest('./dist/scripts/'));
 
 gulp.task 'browser-sync', ->
     browser_sync
@@ -42,11 +50,13 @@ gulp.task 'develop', [
     'compass'
     'coffee'
     'images'
+    'cjsx'
     'nodemon'
     'browser-sync'
 ], ->
     (gulp.watch 'src/stylesheets/*.scss', ['compass','bs-reload']).on 'change', reportChange
     (gulp.watch 'src/scripts/*.coffee', ['coffee','bs-reload']).on 'change', reportChange
+    (gulp.watch 'src/*.cjsx', ['cjsx','bs-reload']).on('change', reportChange)
     (gulp.watch 'src/images/**/*', ['images','bs-reload']).on 'change', reportChange
     (gulp.watch 'src/**/*.jade', ['bs-reload']).on('change', reportChange)
     return
@@ -56,5 +66,6 @@ gulp.task 'default', [
     'compass'
     'coffee'
     'images'
+    'cjsx'
 ], ->
     return
