@@ -3,11 +3,24 @@ html.no-js
     head
         meta(charset='utf-8')
         meta(http-equiv='X-UA-Compatible', content='IE=edge')
-        title Dyno
+        title Geoserver esikatselu
         meta(name='description', content='')
         meta(name='viewport', content='width=device-width, initial-scale=1')
-        link(rel="stylesheet", href="stylesheets/main.css")
-        script(src="scripts/app.js")
+
+        
+        link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css", rel="stylesheet")
+        link(rel="stylesheet", href=staticPrefix("/stylesheets/hel-bootstrap.min.css"))
+        script(src=staticPrefix("/bower_components/jquery/dist/jquery.min.js"))
+        script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js")
+        
+        script(src=staticPrefix("/bower_components/proj4/dist/proj4.js"))
+        
+        script(type="text/javascript").
+          proj4.defs('EPSG:3067','+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
+        script(src=staticPrefix("/bower_components/openlayers3/build/ol.js"))
+        
+        link(rel="stylesheet", href=staticPrefix("/bower_components/openlayers3/build/ol.css"))
+        link(rel="stylesheet", href=staticPrefix("/stylesheets/main.css"))
     body
         <!--[if lte IE 8]>
         p.browsehappy
@@ -16,10 +29,42 @@ html.no-js
           | to improve your experience.
         <![endif]-->
 
-        div.container
-            h1 Dyno!
-            :markdown
-                This repo is an opinionated scaffolding, utilizing **Coffeescript** (*because screw semi-colons*), **Browserify** (*because node is awesome*), **Gulp** (*because .pipe(task) is amazing*), and **Jade** templates (*because America*).
+        if ((typeof tileserverUrl) !== "undefined") && (tileserverUrl.length != 0)
+          div#config(data-tileserver-url=tileserverUrl, data-geoserver-baseurl=geoserverUrl)
+          div#maincontainer.container
+              h1 Geoserver-esikatselu
+              br
+
+              p(style="text-align:center;") Täällä voit esikatsella osoiterivillä määriteltyjä Helsingin kaupungin avoimia 
+                a(href="http://geoserver.hel.fi/geoserver/web" target="_blank") paikkatietoaineistoja
+                |  ja ladata ne haluamassasi muodossa. Sivun toteutus on 
+                a(href="https://github.com/City-of-Helsinki/geoserver-preview" target="_blank") avointa lähdekoodia
+                |.
+
+              div.tablecontainer
+                  block layerlist
+
+          
+              div#map.map
+              p#attribution ©
+                  a(href="http://www.openstreetmap.org/copyright") OpenStreetMap
+                  |  contributors
+                  div#popup.ol-popup
+                  a(href="#" id="popup-closer" class="ol-popup-closer")
+                  div#popup-content
+
+              
+              div.footer
+                  a(href="http://dev.hel.fi" target="_blank")
+                      img(src=staticPrefix("/images/hel-heart-dev.png"), title="Helsinki loves developers!", alt="Helsinki loves developers!")
+                  a(href="http://www.hri.fi" target="_blank")
+                      img(src=staticPrefix("/images/hri.png"), title="Helsinki Region Infoshare", alt="Helsinki Region Infoshare")
+
+          script(src=staticPrefix("/scripts/app.js"))
+        else
+          p Mitään ei löytynyt tai Helsingin kaupungin 
+            a(href="http://geoserver.hel.fi/geoserver/web") Geoserveriin
+            |  ei saada yhteyttä
 
   //- Google Analytics: change UA-XXXXX-X to be your site's ID.
   //-

@@ -1,0 +1,66 @@
+extends ../index
+
+block layerlist
+    if ((typeof layerData) !== "undefined") && (layerData.length != 0)
+        div.table-responsive
+            table.layerlist.table
+                tr
+                    th Namespace:Name
+                    th Type
+                    th CRS
+                    th Läpinäkyvyys
+                    th Lataa
+                    th Näytä
+                    th Seloste
+                
+                for layer, index in layerData
+                    tr
+                        
+                        if layer['status'] != 'OK'
+                            td(data-name=layer['name'], class='tdName')= layer['name']
+                            td Ei löytynyt!
+                            td Ei löytynyt!
+                            td Ei löytynyt!
+                            td Ei löytynyt!
+                            td Ei löytynyt!
+                            td Ei löytynyt!
+                        else
+                            td(data-name=layer['name'], data-namespace=layer['namespace'], class='tdName')= layer['namespace'] + ':' + layer['name']
+                            td(data-type=layer['type'], class='tdType')= layer['type']
+                            td(data-srs=layer['srs'], data-bbox=layer['nativeBoundingBox']['minx']+','+layer['nativeBoundingBox']['miny']+','+layer['nativeBoundingBox']['maxx']+','+layer['nativeBoundingBox']['maxy'])= layer['srs']
+                            td(id="opacity")
+                                input(type="number", min="0", max="100", value="80", label="opacity")
+                            td
+                                //- Behaviour of select differs in FF and Chrome. FF produces a click event for the option showing when we click on the select element to expand it, which is not what we want.
+                                select(onclick="this.selectedIndex==0 ? null : window.open(this.value);this.selectedIndex=0;")
+                                    option Valitse formaatti
+                                    optgroup(label="WMS")
+                                        for opt, label in wms_formats
+                                            option(value="#{layer['downloadLinks']['wms']}#{opt}")= label
+                                    if layer['type'] == 'vector'
+                                        optgroup(label="WFS")
+                                            for opt, label in wfs_formats
+                                                option(value="#{layer['downloadLinks']['wfs']}#{opt}")= label
+                            td.show-on-map
+                                button(label="Näytä kartalla", id=layer['name'], class='layerToggle do-show', data-namespace=layer['namespace'], data-name=layer['name'], class='tdName') Näytä
+                            td.legend-td
+                if ((typeof available_layers) !== "undefined") && (available_layers.length != 0)
+                    tr
+                        td
+                            //- Dropdown to add a new dataset into the list
+                            select(id="addnew-list" onclick="this.selectedIndex==0 ? null : window.open(window.location.href+','+this.value.split(':')[1], '_self');this.selectedIndex=0;")
+                                option Selaa aineistoja ja lisää esikatseluun
+                                for layer in available_layers
+                                  option #{layer}
+                        td
+                        td
+                        td
+                        td
+                        td
+                        td
+
+
+    else
+        p Mitään ei löytynyt tai Helsingin kaupungin 
+            a(href="http://geoserver.hel.fi/geoserver/web") Geoserveriin
+            |  ei saada yhteyttä
