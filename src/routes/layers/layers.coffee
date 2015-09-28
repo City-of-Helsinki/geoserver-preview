@@ -118,7 +118,7 @@ makeDownloadLinks = (resource) ->
 
     wfs_url = commonUrl + "/ows?service=WFS&version=1.0.0&request=GetFeature"+
         "&typeName=#{layerFullName}"+
-        "&maxFeatures=50"+
+        "&maxFeatures=1000000"+
         "&outputFormat="
 
     return {'wms': wms_url, 'wfs': wfs_url}
