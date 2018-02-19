@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "Lightweight application for previewing datasets on a geoserver instance",
   "authors": "Henri Kotkanen <henri.kotkanen@gmail.com>",
-  "keywords": ["geoserver"],
+  "keywords": [
+    "geoserver"
+  ],
   "dependencies": {
     "bower": "^1.4.1",
     "browserify": "^11.0.0",
@@ -28,7 +30,7 @@
     "js-yaml": "^3.3.1",
     "marked": "^0.3.3",
     "q": "^1.4.1",
-    "request-promise": "^0.4.3",
+    "request-promise": "^2.0.1",
     "xml2js": "^0.4.9"
   },
   "devDependencies": {
